@@ -55,7 +55,32 @@ object Main {
     xl_ret.toArray
   }
 
+  def watch(y:Array[Double], t:Double) = {
+    val n = (t / step).toInt
+    y(n)
+  }
+
+
   def main(args:Array[String]): Unit = {
     hello
+  }
+}
+
+
+object EdgeCounter {
+  def countup(n : Int, sw_p : Int, sw_c : Int) = {
+    if (sw_p == 0 && sw_c != 0) {
+      n+1
+    } else {
+      n
+    }
+  }
+
+  def reset(n : Int, reset : Int) = {
+    if (reset != 0) {
+      n
+    } else {
+      0
+    }
   }
 }
