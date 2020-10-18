@@ -11,13 +11,21 @@ object Main {
   def init(x0:Double) = {
     Array(Array(0.0,x0))
   }
-  
+
+  /* 現在の時刻 */
+  def current_time(xs:Array[Array[Double]]) = {
+    xs.toList.last(0)
+  }
+
+  /* 現在の値 */
+  def current_value(xs:Array[Array[Double]]) = {
+    xs.toList.last(1)
+  }
+
   /* 次周期に x に変化 */
   def next(xs:Array[Array[Double]], x:Double) = {
     val xl = xs.toList
     val t_last = xl.last(0)
-    val x_last = xl.last(1)
-
     val xl_ret = xl ++ List(Array(t_last + step, x))
     xl_ret.toArray
   }
@@ -55,32 +63,69 @@ object Main {
     xl_ret.toArray
   }
 
-  def watch(y:Array[Double], t:Double) = {
+  def print(y:Array[Double], t:Double) = {
     val n = (t / step).toInt
     y(n)
   }
-
 
   def main(args:Array[String]): Unit = {
     hello
   }
 }
 
+object TimeSeries {
+  val step = 0.01
 
-object EdgeCounter {
-  def countup(n : Int, sw_p : Int, sw_c : Int) = {
-    if (sw_p == 0 && sw_c != 0) {
-      n+1
-    } else {
-      n
-    }
+  /* 初期値 */
+  def init(x0:Double) = {
+    Array(Array(0.0,x0))
   }
 
-  def reset(n : Int, reset : Int) = {
-    if (reset != 0) {
-      n
-    } else {
-      0
-    }
+  /* 現在の時刻 */
+  def current_time(xs:Array[Array[Double]]) = {
+    xs.toList.last(0)
   }
+
+  /* 現在の値 */
+  def current_value(xs:Array[Array[Double]]) = {
+    xs.toList.last(1)
+  }
+
+  /* 次周期に x に変化 */
+  def next(xs:Array[Array[Double]], x:Double) = {
+    val xl = xs.toList
+    val t_last = xl.last(0)
+    val x_last = xl.last(1)
+    val xl_ret = xl ++ List(Array(t_last + step, x))
+    xl_ret.toArray
+  }
+
+  /* dt 経過後に x に変化 */
+  def after(xs:Array[Array[Double]], dt:Double, x:Double) = {
+    val xl = xs.toList
+    val t_last = xl.last(0)
+    val x_last = xl.last(1)
+
+    val n_head = ((t_last + step) / step).toInt
+    val n_tail = ((t_last + dt) / step).toInt
+    val x_pre = Range(n_head,n_tail).toList.map(n => Array(n.toDouble * step, x_last))
+
+    val xl_ret = xl ++ x_pre ++ List(Array(t_last + dt,x))
+    xl_ret.toArray
+  }
+
+  def z_inv(x0 : Double, xs:Array[Array[Double]]) = {
+    val n_last = (xs.toList.last(0) / step).toInt
+    val xs_vals = xs.map(x => x(1)).toList
+    val z_inv_val = (x0 :: xs_vals.dropRight(1)).toArray
+    val samples = Range(0,n_last+1).toList
+    samples.map(n => Array(n.toDouble/step, z_inv_val(n)))
+  }
+
+  /* 出力された時系列(配列の値を表示) */
+  def print(y:Array[Double], t:Double) = {
+    val n = (t / step).toInt
+    y(n)
+  }
+
 }
