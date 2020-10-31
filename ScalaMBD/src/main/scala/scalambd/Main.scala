@@ -1,10 +1,12 @@
 package com.scalambd
 
+import scala.math._
+
 object Main {
   val step = 0.01
 
   def hello: Unit = {
-    println("Hello, This is TimeSeriesEdit.")
+    println("Hello, This is Scalambd Version 0.1 Build Oct 31th 2020.")
   }
 
   /* 初期値 */
@@ -195,16 +197,28 @@ object TimeSeries {
 
 
 object Arith {
-  def relu (x:Double) = {
-    if (x >= 0.0) x else 0.0
-  }
-
-  def abs(x:Double) = {
-    if (x >= 0.0) x else -x
-  }
+  def relu (x:Double) = if (x >= 0.0) x else 0.0
+  def weight (w:Double, x:Double) = w * x
+  def bias (x:Double, b:Double) = x + b
+  def abs(x:Double) = if (x >= 0.0) x else -x
+  def sigmoid(x:Double, x0:Double) = 1.0 / (1.0 + exp(-x+x0))
 } 
 
 class SFunc {
   def relu(x:Double):Double = if (x >= 0.0) x else 0.0
-  def abs(x:Double):Double = if (x >= 0.0) x else 0.0
+  def weight (w:Double, x:Double) = w * x
+  def bias (x:Double, b:Double) = x + b
+  def abs(x:Double) = if (x >= 0.0) x else -x
+  def sigmoid(x:Double, x0:Double) = 1.0 / (1.0 + exp(-x+x0))
 }
+
+class SimpleSignal(val offset : Double) {
+  var value = 0.0
+  def put(x:Double) : Unit = {
+    value = if (x >= 0.0) { x } else { x + offset }
+  }
+
+  def get() = value
+}
+
+
