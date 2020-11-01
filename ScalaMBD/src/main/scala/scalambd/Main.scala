@@ -3,71 +3,8 @@ package com.scalambd
 import scala.math._
 
 object Main {
-  val step = 0.01
-
-  def hello: Unit = {
-    println("Hello, This is Scalambd Version 0.1 Build Oct 31th 2020.")
-  }
-
-  /* 初期値 */
-  def init(x0:Double) = {
-    Array(Array(0.0,x0))
-  }
-
-  /* 現在の時刻 */
-  def current_time(xs:Array[Array[Double]]) = {
-    xs.toList.last(0)
-  }
-
-  /* 現在の値 */
-  def current_value(xs:Array[Array[Double]]) = {
-    xs.toList.last(1)
-  }
-
-  /* 次周期に x に変化 */
-  def next(xs:Array[Array[Double]], x:Double) = {
-    val xl = xs.toList
-    val t_last = xl.last(0)
-    val xl_ret = xl ++ List(Array(t_last + step, x))
-    xl_ret.toArray
-  }
-
-  /* dt 経過後に x に変化 */
-  def after(xs:Array[Array[Double]], dt:Double, x:Double) = {
-    val xl = xs.toList
-    val t_last = xl.last(0)
-    val x_last = xl.last(1)
-
-    val x_pre = if (x_last != x) {
-      List(Array(t_last + dt - step, x_last))
-    }
-    else {
-      List.empty
-    }
-
-    val xl_ret = xl ++ x_pre ++ List(Array(t_last + dt,x))
-    xl_ret.toArray
-  }
-
-  def append(xs:Array[Array[Double]], t:Double, x:Double) = {
-    val xl = xs.toList
-    val t_last = xl.last(0)
-    val x_last = xl.last(1)
-
-    val x_pre = if (t_last < t - 0.1 && x_last != x) {
-      List(Array(t-0.1, x_last))
-    }
-    else {
-      List.empty
-    }
-
-    val xl_ret = xl ++ x_pre ++ List(Array(t,x))
-    xl_ret.toArray
-  }
-
-  def print(y:Array[Double], t:Double) = {
-    val n = (t / step).toInt
-    y(n)
+  def hello : Unit = {
+    println("Hello, This is ScalaMBD Ver 0.5")
   }
 
   def main(args:Array[String]): Unit = {
@@ -222,3 +159,38 @@ class SimpleSignal(val offset : Double) {
 }
 
 
+import javax.swing._
+import java.awt._
+import java.awt.event._
+
+
+class SwingUI extends JFrame {
+  val input_value = new SimpleSignal(0.0)
+  setTitle("Signal Example")
+
+  val panel = new JPanel
+  val textField = new JTextField("0",25)
+  //textField.setText("0",25)
+  panel.add(textField)
+  val button =new JButton("Enter")
+  panel.add(button)
+
+  def onClick(): Unit = {
+    val textValue = textField.getText.toDouble
+    input_value.put(textValue)
+  }
+
+  button.addActionListener(new ActionListener {
+    override def actionPerformed(e: ActionEvent): Unit = onClick() })
+
+  getContentPane.add(panel)
+  setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+  setSize(new Dimension(300, 200))
+  setLocationRelativeTo(null)
+
+  def input : SimpleSignal = input_value
+}
+
+object SwingSignal {
+  def createUI : SwingUI = new SwingUI
+}
