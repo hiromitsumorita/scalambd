@@ -184,7 +184,7 @@ class SwingUI extends JFrame {
     override def actionPerformed(e: ActionEvent): Unit = onClick() })
 
   getContentPane.add(panel)
-  setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+  //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
   setSize(new Dimension(300, 200))
   setLocationRelativeTo(null)
 
